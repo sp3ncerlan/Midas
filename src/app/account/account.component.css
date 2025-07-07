@@ -1,0 +1,8 @@
+input {
+  width: 50%; /* Adjust the width as needed, e.g., 100%, 300px, etc. */
+  max-width: 400px; /* Optional: Set a maximum width */
+}
+
+dialog {
+  width: 50%;
+}
