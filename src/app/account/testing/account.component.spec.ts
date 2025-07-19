@@ -1,8 +1,8 @@
 // Example: Test for AccountComponent
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
-import { AccountComponent } from './account.component';
-import { AccountService } from './account.service';
+import { AccountComponent } from './components/account.component';
+import { AccountService } from './services/account.service';
 
 describe('AccountComponent', () => {
   let component: AccountComponent;
