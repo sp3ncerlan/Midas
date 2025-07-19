@@ -3,8 +3,9 @@ import { AppComponent } from "./app.component";
 import { BrowserModule } from "@angular/platform-browser";
 import { AccountModule } from "./account/account.module";
 import { DashboardModule } from "./dashboard/dashboard.module";
-import { TransactionModule } from "./transaction/transaction.module";
 import { SharedModule } from "./shared/shared.module";
+import { RouterModule } from "@angular/router"
+import { routes } from "./app.routes";
 
 @NgModule({
   declarations: [AppComponent],
@@ -12,8 +13,9 @@ import { SharedModule } from "./shared/shared.module";
     BrowserModule,
     AccountModule,
     DashboardModule,
-    TransactionModule,
-    SharedModule
-  ]
+    SharedModule,
+    RouterModule.forRoot(routes)
+  ],
+  bootstrap: [AppComponent]
 })
 export class AppModule {}
