@@ -6,6 +6,9 @@ import { DashboardModule } from "./dashboard/dashboard.module";
 import { SharedModule } from "./shared/shared.module";
 import { RouterModule } from "@angular/router"
 import { routes } from "./app.routes";
+import { TransactionModule } from "./transaction/transaction.module";
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+
 
 @NgModule({
   declarations: [AppComponent],
@@ -13,7 +16,9 @@ import { routes } from "./app.routes";
     BrowserModule,
     AccountModule,
     DashboardModule,
+    TransactionModule,
     SharedModule,
+    NgxChartsModule,
     RouterModule.forRoot(routes)
   ],
   bootstrap: [AppComponent]

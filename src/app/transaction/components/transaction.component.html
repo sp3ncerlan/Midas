@@ -1,1 +1,293 @@
-<p>transaction works!</p>
+<div class="transaction-app">
+  <div class="header-section">
+    <h1 class="app-title">Transactions</h1>
+    <button class="add-btn" (click)="openAddTransactionDialog()">
+      <span class="btn-icon">+</span>
+      Add Transaction
+    </button>
+  </div>
+
+  <!-- Add Transaction Modal -->
+  <div *ngIf="showAddDialog" class="transaction-overlay" (click)="closeAddDialog()">
+    <div class="modal-container" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2 class="modal-title">💰 Add New Transaction</h2>
+        <button type="button" class="close-btn" (click)="closeAddDialog()">
+          ×
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <form
+          [formGroup]="transactionForm"
+          (ngSubmit)="onAddTransaction()"
+          class="transaction-form"
+        >
+          <div class="form-group">
+            <label for="date" class="form-label">
+              <span class="label-icon">📅</span>
+              Date
+            </label>
+            <input
+              type="date"
+              id="date"
+              class="form-control"
+              formControlName="date"
+            />
+            <div
+              *ngIf="
+                transactionForm.get('date')?.invalid &&
+                transactionForm.get('date')?.touched
+              "
+              class="error-message"
+            >
+              <span class="error-icon">⚠️</span>
+              Date is required
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="description" class="form-label">
+              <span class="label-icon">📝</span>
+              Description
+            </label>
+            <input
+              type="text"
+              id="description"
+              formControlName="description"
+              class="form-control"
+              [class.error]="
+                transactionForm.get('description')?.invalid &&
+                transactionForm.get('description')?.touched
+              "
+              placeholder="e.g., Groceries, Coffee, Gas"
+            />
+            <div
+              *ngIf="
+                transactionForm.get('description')?.invalid &&
+                transactionForm.get('description')?.touched
+              "
+              class="error-message"
+            >
+              <span class="error-icon">⚠️</span>
+              Description is required
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="amount" class="form-label">
+              <span class="label-icon">💵</span>
+              Amount
+            </label>
+            <div class="amount-input-wrapper">
+              <span class="currency-symbol">$</span>
+              <input
+                type="number"
+                id="amount"
+                formControlName="amount"
+                class="form-control amount-input"
+                [class.error]="
+                  transactionForm.get('amount')?.invalid &&
+                  transactionForm.get('amount')?.touched
+                "
+                placeholder="0.00"
+                step="0.01"
+                min="0"
+              />
+            </div>
+            <div
+              *ngIf="
+                transactionForm.get('amount')?.invalid &&
+                transactionForm.get('amount')?.touched
+              "
+              class="error-message"
+            >
+              <span class="error-icon">⚠️</span>
+              Please enter a valid amount
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button
+              type="button"
+              class="btn btn-cancel"
+              (click)="closeAddDialog()"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              class="btn btn-primary"
+              [disabled]="!transactionForm.valid"
+            >
+              💰 Add Transaction
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Transaction Modal -->
+  <div *ngIf="showEditDialog" class="transaction-overlay" (click)="closeEditDialog()">
+    <div class="modal-container" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2 class="modal-title">💰 Add New Transaction</h2>
+        <button type="button" class="close-btn" (click)="closeEditDialog()">
+          ×
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <form
+          [formGroup]="transactionForm"
+          (ngSubmit)="onSaveEditedTransaction()"
+          class="transaction-form"
+        >
+          <div class="form-group">
+            <label for="date" class="form-label">
+              <span class="label-icon">📅</span>
+              Date
+            </label>
+            <input
+              type="date"
+              id="date"
+              class="form-control"
+              formControlName="date"
+            />
+            <div
+              *ngIf="
+                transactionForm.get('date')?.invalid &&
+                transactionForm.get('date')?.touched
+              "
+              class="error-message"
+            >
+              <span class="error-icon">⚠️</span>
+              Date is required
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="description" class="form-label">
+              <span class="label-icon">📝</span>
+              Description
+            </label>
+            <input
+              type="text"
+              id="description"
+              formControlName="description"
+              class="form-control"
+              [class.error]="
+                transactionForm.get('description')?.invalid &&
+                transactionForm.get('description')?.touched
+              "
+              placeholder="e.g., Groceries, Coffee, Gas"
+            />
+            <div
+              *ngIf="
+                transactionForm.get('description')?.invalid &&
+                transactionForm.get('description')?.touched
+              "
+              class="error-message"
+            >
+              <span class="error-icon">⚠️</span>
+              Description is required
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="amount" class="form-label">
+              <span class="label-icon">💵</span>
+              Amount
+            </label>
+            <div class="amount-input-wrapper">
+              <span class="currency-symbol">$</span>
+              <input
+                type="number"
+                id="amount"
+                formControlName="amount"
+                class="form-control amount-input"
+                [class.error]="
+                  transactionForm.get('amount')?.invalid &&
+                  transactionForm.get('amount')?.touched
+                "
+                placeholder="0.00"
+                step="0.01"
+                min="0"
+              />
+            </div>
+            <div
+              *ngIf="
+                transactionForm.get('amount')?.invalid &&
+                transactionForm.get('amount')?.touched
+              "
+              class="error-message"
+            >
+              <span class="error-icon">⚠️</span>
+              Please enter a valid amount
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button
+              type="button"
+              class="btn btn-cancel"
+              (click)="closeEditDialog()"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              class="btn btn-primary"
+              [disabled]="!transactionForm.valid"
+            >
+              💰 Edit Transaction
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Transactions Section -->
+  <div class="transactions-section">
+    <h2 class="section-title">This Month's Transactions</h2>
+
+    <div *ngIf="allTransactions.length === 0" class="no-transactions">
+      <div class="empty-state">
+        <div class="empty-icon">💳</div>
+        <h3>No transactions yet</h3>
+        <p>Start by adding your first transaction above!</p>
+      </div>
+    </div>
+
+    <div class="transactions-container" *ngIf="allTransactions.length > 0">
+      <div
+        *ngFor="let transaction of monthTransactions; let i = index"
+        class="transaction-card"
+      >
+        <div class="transaction-content">
+          <div class="transaction-left">
+            <div class="transaction-icon">💰</div>
+            <div class="transaction-details">
+              <h4 class="transaction-description">
+                {{ transaction.description }}
+              </h4>
+              <p class="transaction-date">
+                {{ transaction.date | date : "fullDate" }}
+              </p>
+            </div>
+          </div>
+          <div class="transaction-right">
+            <div class="transaction-amount">
+              ${{ transaction.amount | number : "1.2-2" }}
+            </div>
+
+            <button class="btn-cancel" (click)="editTransaction(transaction)">Edit</button>
+            <button class="btn-cancel" (click)="deleteTransaction(transaction.id)">Delete</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

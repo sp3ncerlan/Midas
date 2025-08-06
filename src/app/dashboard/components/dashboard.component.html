@@ -1,4 +1,86 @@
 <div>
   <h1>Dashboard</h1>
-  <h2>Total Cash Balance: {{ totalBalance | currency }}</h2>
+  <h2>Current Cash Balance: {{ totalBalance | currency }}</h2>
+
+  <div>
+    <div [ngClass]="{ 'text-red': currentBudget <= currentSpend, 'text-green': currentBudget > currentSpend }">
+      Current Budget: {{ currentBudget | currency }}
+    </div>
+
+    <small>Current Spend: {{ currentSpend | currency }}</small>
+
+    <br />
+
+    <button (click)="onSetBudgetClick()">Set Budget</button>
+  </div>
+
+  <!-- Set Budget Modal -->
+  <div
+    *ngIf="showBudgetDialog"
+    class="modal-overlay"
+    (click)="closeSetBudgetDialog()"
+  >
+    <div class="modal-container" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2 class="modal-title">Set Budget</h2>
+        <button
+          type="button"
+          class="close-btn"
+          (click)="closeSetBudgetDialog()"
+        >
+          ×
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <form
+          (ngSubmit)="onSetBudget()"
+          [formGroup]="budgetForm"
+          class="budget-form"
+        >
+          <!-- Budget Input -->
+          <div class="form-group">
+            <label for="budget" class="form-label">Budget Amount</label>
+            <input
+              type="number"
+              id="budget"
+              formControlName="budget"
+              class="form-input"
+              placeholder="Enter your budget..."
+              step="0.01"
+              required
+            />
+            <div
+              *ngIf="
+                budgetForm.get('budget')?.invalid &&
+                budgetForm.get('budget')?.touched
+              "
+              class="error-message"
+            >
+              <span class="error-icon">⚠️</span>
+              Budget is required and must be greater than 0.
+            </div>
+          </div>
+
+          <!-- Form Actions -->
+          <div class="form-actions">
+            <button
+              type="button"
+              class="btn btn-cancel"
+              (click)="closeSetBudgetDialog()"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              class="btn btn-primary"
+              [disabled]="budgetForm.invalid"
+            >
+              Save Budget
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>
