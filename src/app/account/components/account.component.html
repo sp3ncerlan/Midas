@@ -1,95 +1,177 @@
 <div class="account-app">
   <div class="header-section">
-    <h1>Bank Accounts</h1>
+    <h1 class="app-title">Bank Accounts</h1>
+    <button class="add-btn" (click)="showAddDialog = true">
+      <span class="btn-icon">+</span>
+      Add Account
+    </button>
   </div>
 
-  <ul>
-    <li *ngFor="let account of accounts">
-      {{ account.name }}: {{ account.balance | currency }}
-      <button (click)="openEditDialog(account)">Edit</button>
-      <button (click)="openDeleteDialog(account.name)">Delete</button>
-    </li>
-  </ul> 
-
-  <button id="add-account-button" (click)="showAddDialog = true">Add Account</button>
-
   <div *ngIf="errorMessage" class="error-message">
+    <span class="error-icon">⚠️</span>
     {{ errorMessage }}
   </div>
 
-  <!-- Add Dialogue -->
-  <div *ngIf="showAddDialog">
-    <dialog open>
-      <h2>Add Account</h2>
-      <form (ngSubmit)="addAccount()">
-        <p>
-          <label for="name">Name</label>
-          <input
-            type="name"
-            id="account-name"
-            name="name"
-            placeholder="Please enter account name..."
-            [(ngModel)]="newAccount.name"
-          />
-        </p>
-
-        <p>
-          <label for="balance">Balance</label>
-          <input
-            type="number"
-            id="account-balance"
-            name="balance"
-            placeholder="Please enter account balance..."
-            [(ngModel)]="newAccount.balance"
-          />
-        </p>
-
-        <p>
-          <button type="button" (click)="onCloseAddAccount()">Cancel</button>
-          <button type="submit">Create</button>
-        </p>
-      </form>
-    </dialog>
+  <!-- Empty State -->
+  <div *ngIf="accounts.length === 0" class="no-accounts">
+    <div class="empty-state">
+      <div class="empty-icon">🏦</div>
+      <h3>No accounts yet</h3>
+      <p>Start by adding your first bank account above!</p>
+    </div>
   </div>
 
-  <!-- Edit Dialogue -->
-  <div *ngIf="showEditDialog">
-    <dialog open>
-      <h2>Edit Account</h2>
-      <form (ngSubmit)="editAccount()">
-        <p>
-          <label for="editName">{{ editingAccount.name }}</label>
-        </p>
-
-        <p>
-          <label for="editBalance">Balance</label>
-          <input
-            type="number"
-            id="editBalance"
-            name="editBalance"
-            [(ngModel)]="editingAccount.balance"
-          />
-        </p>
-
-        <p>
-          <button type="button" (click)="onCloseEditDialog()">Cancel</button>
-          <button id="update-account-button" type="submit">Update</button>
-        </p>
-      </form>
-    </dialog>
+  <!-- Accounts List -->
+  <div class="accounts-container" *ngIf="accounts.length > 0">
+    <div *ngFor="let account of accounts" class="account-card">
+      <div class="account-content">
+        <div class="account-left">
+          <div class="account-icon">🏦</div>
+          <div class="account-details">
+            <h4 class="account-name">{{ account.name }}</h4>
+            <p class="account-type">Bank Account</p>
+          </div>
+        </div>
+        <div class="account-right">
+          <div class="account-balance">
+            {{ account.balance | currency }}
+          </div>
+          <button class="btn-edit" (click)="openEditDialog(account)">Edit</button>
+          <button class="btn-delete" (click)="openDeleteDialog(account.name)">Delete</button>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <!-- Delete Dialogue -->
-  <div *ngIf="showDeleteDialog">
-    <dialog open>
-      <h2>Delete Account</h2>
-      <form (ngSubmit)="deleteAccount()">
-        <p>
-          Are you sure you want to delete this account?
-          <button type="button" (click)="onCloseDeleteDialog()">Cancel</button>
-          <button type="submit">Confirm</button>
-        </p>
-      </form>
-    </dialog>
+  <!-- Add Account Modal -->
+  <div *ngIf="showAddDialog" class="transaction-overlay" (click)="onCloseAddAccount()">
+    <div class="modal-container" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2 class="modal-title">🏦 Add Account</h2>
+        <button type="button" class="close-btn" (click)="onCloseAddAccount()">×</button>
+      </div>
+
+      <div class="modal-body">
+        <form (ngSubmit)="addAccount()" class="transaction-form">
+          <div class="form-group">
+            <label for="name" class="form-label">
+              <span class="label-icon">🏷️</span>
+              Account Name
+            </label>
+            <input
+              type="text"
+              id="account-name"
+              name="name"
+              class="form-control"
+              placeholder="e.g., Checking Account, Savings"
+              [(ngModel)]="newAccount.name"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="balance" class="form-label">
+              <span class="label-icon">💵</span>
+              Initial Balance
+            </label>
+            <div class="amount-input-wrapper">
+              <span class="currency-symbol">$</span>
+              <input
+                type="number"
+                id="account-balance"
+                name="balance"
+                class="form-control amount-input"
+                placeholder="0.00"
+                step="0.01"
+                [(ngModel)]="newAccount.balance"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn btn-cancel" (click)="onCloseAddAccount()">Cancel</button>
+            <button type="submit" class="btn btn-primary">🏦 Create Account</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Account Modal -->
+  <div *ngIf="showEditDialog" class="transaction-overlay" (click)="onCloseEditDialog()">
+    <div class="modal-container" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2 class="modal-title">✏️ Edit Account</h2>
+        <button type="button" class="close-btn" (click)="onCloseEditDialog()">×</button>
+      </div>
+
+      <div class="modal-body">
+        <form (ngSubmit)="editAccount()" class="transaction-form">
+          <div class="form-group">
+            <label for="editName" class="form-label">
+              <span class="label-icon">🏷️</span>
+              Account Name
+            </label>
+            <input
+              type="text"
+              id="editName"
+              name="editName"
+              class="form-control"
+              [value]="editingAccount.name"
+              readonly
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="editBalance" class="form-label">
+              <span class="label-icon">💵</span>
+              Balance
+            </label>
+            <div class="amount-input-wrapper">
+              <span class="currency-symbol">$</span>
+              <input
+                type="number"
+                id="editBalance"
+                name="editBalance"
+                class="form-control amount-input"
+                placeholder="0.00"
+                step="0.01"
+                [(ngModel)]="editingAccount.balance"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn btn-cancel" (click)="onCloseEditDialog()">Cancel</button>
+            <button type="submit" class="btn btn-primary">💾 Update Account</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div *ngIf="showDeleteDialog" class="transaction-overlay" (click)="onCloseDeleteDialog()">
+    <div class="modal-container" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2 class="modal-title">🗑️ Delete Account</h2>
+        <button type="button" class="close-btn" (click)="onCloseDeleteDialog()">×</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="delete-confirmation">
+          <div class="warning-icon">⚠️</div>
+          <h3>Are you sure?</h3>
+          <p>This action cannot be undone. The account will be permanently deleted.</p>
+          
+          <div class="form-actions">
+            <button type="button" class="btn btn-cancel" (click)="onCloseDeleteDialog()">Cancel</button>
+            <button type="button" class="btn-delete" (click)="deleteAccount()">🗑️ Delete Account</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

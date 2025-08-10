@@ -1,8 +1,7 @@
-// Example: Test for AccountComponent
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
-import { AccountComponent } from './components/account.component';
-import { AccountService } from './services/account.service';
+import { AccountComponent } from '../components/account.component';
+import { AccountService } from '../services/account.service';
 
 describe('AccountComponent', () => {
   let component: AccountComponent;
@@ -13,7 +12,8 @@ describe('AccountComponent', () => {
     const spy = jasmine.createSpyObj('AccountService', ['addAccount', 'getAccounts', 'deleteAccount', 'getTotalBalance']);
 
     await TestBed.configureTestingModule({
-      imports: [AccountComponent, FormsModule],
+      declarations: [AccountComponent],
+      imports: [FormsModule],
       providers: [
         { provide: AccountService, useValue: spy }
       ]

@@ -11,7 +11,7 @@ describe('DashboardComponent', () => {
     const spy = jasmine.createSpyObj('AccountService', ['getTotalBalance', 'getAccounts']);
 
     await TestBed.configureTestingModule({
-      imports: [DashboardComponent],
+      declarations: [DashboardComponent],
       providers: [
         { provide: AccountService, useValue: spy }
       ]

@@ -1,5 +1,7 @@
 <nav class="navbar">
-  <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
-  <a routerLink="/accounts" routerLinkActive="active">Accounts</a>
-  <a routerLink="/transactions" routerLinkActive="active">Transactions</a>
+  <div class="navbar-inner">
+    <a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Dashboard</a>
+    <a routerLink="/accounts" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Accounts</a>
+    <a routerLink="/transactions" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Transactions</a>
+  </div>
 </nav>

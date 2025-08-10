@@ -9,14 +9,9 @@ export class TransactionService {
   constructor() {
     this.loadTransactions();
 
-    // Add test data if no transactions exist
     if (this.transactions.length === 0) {
-      console.log('No transactions found, adding test data...');
-      this.transactions = [
-        { date: new Date('2024-01-15'), description: 'Test 2024 Transaction 1', amount: 100 },
-        { date: new Date('2024-07-20'), description: 'Test 2024 Transaction 2', amount: 200 },
-        { date: new Date('2025-01-10'), description: 'Test 2025 Transaction', amount: 150 }
-      ];
+      // avoid null transactions length, set default to []
+      this.transactions = [];
       this.saveTransactions();
     }
   }
@@ -29,7 +24,7 @@ export class TransactionService {
       const parsed = JSON.parse(storedTransactions);
       this.transactions = parsed.map((transaction: any) => ({
         ...transaction,
-        date: new Date(transaction.date) // Ensure date is converted to Date object
+        date: new Date(transaction.date) // conversion to date object
       }));
     } else {
       this.transactions = [];

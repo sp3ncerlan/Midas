@@ -38,6 +38,7 @@ export class AccountService {
     return this.accounts;
   }
 
+  // get single account vs. all accounts from above method
   getAccount(name: string) {
     return this.accounts.find((account) => account.name === name);
   }

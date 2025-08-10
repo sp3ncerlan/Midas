@@ -33,6 +33,7 @@
               id="date"
               class="form-control"
               formControlName="date"
+              [max]="currentDate"
             />
             <div
               *ngIf="
@@ -132,7 +133,7 @@
   <div *ngIf="showEditDialog" class="transaction-overlay" (click)="closeEditDialog()">
     <div class="modal-container" (click)="$event.stopPropagation()">
       <div class="modal-header">
-        <h2 class="modal-title">💰 Add New Transaction</h2>
+        <h2 class="modal-title">💰 Edit Transaction</h2>
         <button type="button" class="close-btn" (click)="closeEditDialog()">
           ×
         </button>
@@ -154,6 +155,7 @@
               id="date"
               class="form-control"
               formControlName="date"
+              [max]="currentDate"
             />
             <div
               *ngIf="
@@ -251,7 +253,10 @@
 
   <!-- Transactions Section -->
   <div class="transactions-section">
-    <h2 class="section-title">This Month's Transactions</h2>
+    <div class="header-section">
+      <h2 class="section-title">This Month's Transactions</h2>
+      <button class="btn-show-all" (click)="openAllTransactionsDialog()">Show All Transactions</button>
+    </div>
 
     <div *ngIf="allTransactions.length === 0" class="no-transactions">
       <div class="empty-state">
@@ -283,8 +288,83 @@
               ${{ transaction.amount | number : "1.2-2" }}
             </div>
 
-            <button class="btn-cancel" (click)="editTransaction(transaction)">Edit</button>
-            <button class="btn-cancel" (click)="deleteTransaction(transaction.id)">Delete</button>
+            <button class="btn-edit" (click)="editTransaction(transaction)">Edit</button>
+            <button class="btn-delete" (click)="onDeleteTransaction(transaction)">Delete</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Show All Transactions Modal -->
+  <div *ngIf="showAllTransactionDialog" class="transaction-overlay" (click)="closeAllTransactionsDialog()">
+    <div class="modal-container large" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2 class="modal-title">📋 All Transactions</h2>
+        <button type="button" class="close-btn" (click)="closeAllTransactionsDialog()">×</button>
+      </div>
+
+      <div class="modal-body scrollable">
+        <div *ngIf="allTransactions.length === 0" class="no-transactions">
+          <div class="empty-state">
+            <div class="empty-icon">💳</div>
+            <h3>No transactions available</h3>
+            <p>There are no transactions to display.</p>
+          </div>
+        </div>
+
+        <div *ngIf="allTransactions.length > 0" class="transactions-container">
+          <div
+            *ngFor="let transaction of allTransactions; let i = index"
+            class="transaction-card"
+          >
+            <div class="transaction-content">
+              <div class="transaction-left">
+                <div class="transaction-icon">💰</div>
+                <div class="transaction-details">
+                  <h4 class="transaction-description">
+                    {{ transaction.description }}
+                  </h4>
+                  <p class="transaction-date">
+                    {{ transaction.date | date : "fullDate" }}
+                  </p>
+                </div>
+              </div>
+              <div class="transaction-right">
+                <div class="transaction-amount">
+                  ${{ transaction.amount | number : "1.2-2" }}
+                </div>
+                <button class="btn-edit" (click)="editTransaction(transaction); showAllTransactionDialog = false">Edit</button>
+                <button class="btn-delete" (click)="onDeleteTransaction(transaction)">Delete</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-cancel" (click)="closeAllTransactionsDialog()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div *ngIf="showDeleteDialog" class="transaction-overlay" (click)="onCloseDeleteDialog()">
+    <div class="modal-container" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2 class="modal-title">🗑️ Delete Transaction</h2>
+        <button type="button" class="close-btn" (click)="onCloseDeleteDialog()">×</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="delete-confirmation">
+          <div class="warning-icon">⚠️</div>
+          <h3>Are you sure?</h3>
+          <p>This action cannot be undone. The transaction "{{ transactionToDelete?.description }}" will be permanently deleted.</p>
+          
+          <div class="form-actions">
+            <button type="button" class="btn btn-cancel" (click)="onCloseDeleteDialog()">Cancel</button>
+            <button type="button" class="btn-delete" (click)="deleteTransaction(transactionToDelete?.id)">🗑️ Delete Transaction</button>
           </div>
         </div>
       </div>

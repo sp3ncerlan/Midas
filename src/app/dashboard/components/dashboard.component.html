@@ -1,28 +1,93 @@
-<div>
-  <h1>Dashboard</h1>
-  <h2>Current Cash Balance: {{ totalBalance | currency }}</h2>
+<div class="dashboard-app">
+  <div class="header-section">
+    <h1 class="app-title">Dashboard</h1>
+    <button class="add-btn" (click)="onSetBudgetClick()">
+      <span class="btn-icon">💰</span>
+      Set Budget
+    </button>
+  </div>
 
-  <div>
-    <div [ngClass]="{ 'text-red': currentBudget <= currentSpend, 'text-green': currentBudget > currentSpend }">
-      Current Budget: {{ currentBudget | currency }}
+  <!-- Balance and Budget Cards -->
+  <div class="cards-section">
+    <div class="balance-card">
+      <div class="card-icon">💵</div>
+      <div class="card-content">
+        <h3 class="card-title">Current Balance</h3>
+        <p class="card-amount balance">{{ totalBalance | currency }}</p>
+      </div>
     </div>
 
-    <small>Current Spend: {{ currentSpend | currency }}</small>
+    <div class="budget-card">
+      <div class="card-icon">📊</div>
+      <div class="card-content">
+        <h3 class="card-title">Budget Status</h3>
+        <p class="card-amount" [ngClass]="{ 'text-red': currentBudget <= currentSpend, 'text-green': currentBudget > currentSpend }">
+          {{ currentBudget | currency }}
+        </p>
+        <small class="card-subtitle">Spent: {{ currentSpend | currency }}</small>
+        <div class="budget-progress">
+          <div class="progress-bar">
+            <div class="progress-fill" [style.width.%]="getBudgetProgressPercentage()"></div>
+          </div>
+          <span class="progress-text">{{ getBudgetProgressPercentage() | number:'1.0-0' }}% used</span>
+        </div>
+      </div>
+    </div>
 
-    <br />
+    <div class="stats-card">
+      <div class="card-icon">📈</div>
+      <div class="card-content">
+        <h3 class="card-title">Average Daily Spend</h3>
+        <p class="card-amount">{{ averageDailySpend | currency }}</p>
+      </div>
+    </div>
 
-    <button (click)="onSetBudgetClick()">Set Budget</button>
+    <div class="stats-card">
+      <div class="card-icon">🎯</div>
+      <div class="card-content">
+        <h3 class="card-title">Budget Remaining</h3>
+        <p class="card-amount" [ngClass]="getBudgetRemainingClass()">
+          {{ budgetRemaining | currency }}
+        </p>
+      </div>
+    </div>
+
+    <div class="stats-card">
+      <div class="card-icon">📝</div>
+      <div class="card-content">
+        <h3 class="card-title">Transactions This Month</h3>
+        <p class="card-amount">{{ monthlyTransactionCount }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Transactions Section -->
+  <div class="recent-transactions-section" *ngIf="recentTransactions.length > 0">
+    <div class="section-header">
+      <h3 class="section-title">Recent Transactions</h3>
+    </div>
+    
+    <div class="recent-transactions-list">
+      <div *ngFor="let transaction of recentTransactions" class="recent-transaction-item">
+        <div class="transaction-icon">💰</div>
+        <div class="transaction-info">
+          <span class="transaction-desc">{{ transaction.description }}</span>
+          <span class="transaction-date">{{ transaction.date | date: 'MMM d' }}</span>
+        </div>
+        <span class="transaction-amount">{{ transaction.amount | currency }}</span>
+      </div>
+    </div>
   </div>
 
   <!-- Set Budget Modal -->
   <div
     *ngIf="showBudgetDialog"
-    class="modal-overlay"
+    class="transaction-overlay"
     (click)="closeSetBudgetDialog()"
   >
     <div class="modal-container" (click)="$event.stopPropagation()">
       <div class="modal-header">
-        <h2 class="modal-title">Set Budget</h2>
+        <h2 class="modal-title">💰 Set Budget</h2>
         <button
           type="button"
           class="close-btn"
@@ -36,20 +101,31 @@
         <form
           (ngSubmit)="onSetBudget()"
           [formGroup]="budgetForm"
-          class="budget-form"
+          class="transaction-form"
         >
           <!-- Budget Input -->
           <div class="form-group">
-            <label for="budget" class="form-label">Budget Amount</label>
-            <input
-              type="number"
-              id="budget"
-              formControlName="budget"
-              class="form-input"
-              placeholder="Enter your budget..."
-              step="0.01"
-              required
-            />
+            <label for="budget" class="form-label">
+              <span class="label-icon">💵</span>
+              Budget Amount
+            </label>
+            <div class="amount-input-wrapper">
+              <span class="currency-symbol">$</span>
+              <input
+                type="number"
+                id="budget"
+                formControlName="budget"
+                class="form-control amount-input"
+                [class.error]="
+                  budgetForm.get('budget')?.invalid &&
+                  budgetForm.get('budget')?.touched
+                "
+                placeholder="0.00"
+                step="0.01"
+                min="0"
+                required
+              />
+            </div>
             <div
               *ngIf="
                 budgetForm.get('budget')?.invalid &&
@@ -76,7 +152,7 @@
               class="btn btn-primary"
               [disabled]="budgetForm.invalid"
             >
-              Save Budget
+              💰 Save Budget
             </button>
           </div>
         </form>

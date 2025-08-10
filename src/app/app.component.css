@@ -1,0 +1,15 @@
+/* added global css for main content */
+
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+html {
+  overflow-y: scroll;
+}
+
+.main-content {
+  padding-top: 80px;
+  min-height: calc(100vh - 80px);
+}
