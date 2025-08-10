@@ -6,7 +6,8 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test --code-coverage"
+    "test": "ng test --code-coverage",
+    "deploy": "ng build --configuration production --base-href='/Midas/' && cp dist/midas-finance/browser/index.html dist/midas-finance/browser/404.html && npx angular-cli-ghpages --dir=dist/midas-finance/browser"
   },
   "private": true,
   "dependencies": {
@@ -34,6 +35,7 @@
     "@angular/cli": "^19.0.6",
     "@angular/compiler-cli": "^19.0.0",
     "@types/jasmine": "~5.1.0",
+    "angular-cli-ghpages": "^2.0.3",
     "jasmine": "^5.8.0",
     "jasmine-core": "~5.4.0",
     "karma": "~6.4.0",
