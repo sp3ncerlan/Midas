@@ -7,7 +7,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test --code-coverage",
-    "deploy": "ng build --configuration production --base-href='/Midas/' && cp dist/midas-finance/browser/index.html dist/midas-finance/browser/404.html && npx angular-cli-ghpages --dir=dist/midas-finance/browser"
+    "deploy": "ng build --configuration production --base-href='/Midas/' --output-path docs && mv docs/browser/* docs/ && rmdir docs/browser && git add docs/ && git commit -m 'Update GitHub Pages deployment' && git push origin main"
   },
   "private": true,
   "dependencies": {
